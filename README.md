@@ -1,1 +1,1 @@
-# VLSI
+# VLSI Design Class
