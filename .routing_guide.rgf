@@ -1,0 +1,6 @@
+routeGuideNet clka
+wire 87.6 58.5 82.8 58.5 H 0.5
+wire 82.8 58.5 82.8 0 V 0.5
+wire 106.8 85.5 87.6 85.5 H 0.5
+wire 87.6 85.5 87.6 58.5 V 0.5
+endRouteGuideNet

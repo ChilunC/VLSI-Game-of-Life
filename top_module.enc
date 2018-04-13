@@ -1,0 +1,1 @@
+restoreDesign [file dirname [file normalize [info script]]]/top_module.enc.dat top_module
