@@ -2,12 +2,13 @@ module dataPath_tb();
 
 reg in_clka, in_clkb, in_restart;
 wire con_loseSig;
-reg [15:0] in_MuxData;
 
-wire [15:0] out_MuxDataOut;
+wire [15:0] out_MuxData;
+wire [15:0] out_MemBData;
 reg con_loadData, con_readData, con_writeData, con_writeout, in_DataIn;
 
-parameter A1  = 16'b0110010101010101, B1= 16'b0000000000000010, C1 = 16'b0000000000000001, D1= 16'b0000000000000010;
+parameter A10  = 16'b0110010101010101, B1= 16'b0000000000000010, C1 = 16'b0000000000000001, D1= 16'b0000000000000010;
+parameter A1 = 16'b0000000000000000;
 parameter A2 = 3'b010, B2 = 3'b011, C2 = 3'b010, D2 = 3'b011;
 parameter A3 = 3'b011, B3 = 3'b100, C3 = 3'b011, D3 = 3'b100;
 parameter CLEAR = 3'b000;
@@ -18,6 +19,7 @@ parameter BEG = 9'b000000000;
 //wire [2:0] out_substate;
 reg [8:0] sub_count;
 reg [8:0] tempsub_count;
+wire [2:0] out_temp_addNumTest;
 //wire out_DO0, out_DO1, out_DO2, out_DO3;
 
 //create an FSM instance.
@@ -80,13 +82,15 @@ dataPath U2 (.clka (in_clka),
 	   .readData (con_readData),
 	   .writeData (con_writeData),
 	   .writeout (con_writeout),
-	   .MuxDataOut (out_MuxDataOut),
+	   .MuxData (out_MuxData),
+	   .MemBData (out_MemBData),
 	   .DataIn (in_DataIn),
 	   .loseSig (con_loseSig),
-	   .count (sub_count)
+	   .count (sub_count),
+	   .temp_addNumTest (out_temp_addNumTest)
         );
 		  
-//dataPath (clka,clkb,loadData, readData, writeData,writeout,MuxData,MuxDataOut, loseSig,count);
+//module dataPath (clka,clkb,restart, loadData, readData, writeData,writeout,MuxData, MemBData, DataIn, loseSig,count, temp_addNumTest);
 
 initial
 begin
@@ -474,9 +478,9 @@ in_clkb = 1;
 #1
 
 // cycle 12 load (2)
-con_loadData = 1;
+con_loadData = 0;
 con_readData = 0;
-con_writeData = 1;
+con_writeData = 0;
 con_writeout = 0;
 //in_DataIn = A1[15];
 sub_count = tempsub_count+1'b1;
@@ -519,13 +523,347 @@ in_clkb = 1;
 
 // cycle 12 load (3)
 con_loadData = 0;
-con_readData = 0;
-con_writeData = 0;
+con_readData = 1;
+con_writeData = 1;
 con_writeout = 0;
 //in_DataIn = A1[16];
 sub_count = BEG;
 tempsub_count = sub_count;
 
+in_clka = 0;
+in_clkb = 0;
+#1
+in_clka = 1;
+in_clkb = 0;
+#1
+in_clka = 0;
+in_clkb = 0;
+#1
+in_clka = 0;
+in_clkb = 1;
+#1
+
+// cycle 8 load (4)
+con_loadData = 0;
+con_readData = 1;
+con_writeData = 1;
+con_writeout = 0;
+sub_count = BEG; //tempsub_count+1'b1;
+tempsub_count = sub_count;
+
+in_clka = 0;
+in_clkb = 0;
+#1
+in_clka = 1;
+in_clkb = 0;
+#1
+in_clka = 0;
+in_clkb = 0;
+#1
+in_clka = 0;
+in_clkb = 1;
+#1
+
+// cycle 9 load (1)
+con_loadData = 0;
+con_readData = 1;
+con_writeData = 1;
+con_writeout = 0;
+sub_count = BEG; //tempsub_count+1'b1;
+tempsub_count = sub_count;
+
+in_clka = 0;
+in_clkb = 0;
+#1
+in_clka = 1;
+in_clkb = 0;
+#1
+in_clka = 0;
+in_clkb = 0;
+#1
+in_clka = 0;
+in_clkb = 1;
+#1
+
+// cycle 10 load (2)
+con_loadData = 0;
+con_readData = 1;
+con_writeData = 1;
+con_writeout = 0;
+sub_count = tempsub_count+1'b1;
+tempsub_count = sub_count;
+
+in_clka = 0;
+in_clkb = 0;
+#1
+in_clka = 1;
+in_clkb = 0;
+#1
+in_clka = 0;
+in_clkb = 0;
+#1
+in_clka = 0;
+in_clkb = 1;
+#1
+
+
+// cycle 11 load and not (3)
+con_loadData = 0;
+con_readData = 1;
+con_writeData = 1;
+con_writeout = 0;
+sub_count = tempsub_count+1'b1;
+tempsub_count = sub_count;
+
+in_clka = 0;
+in_clkb = 0;
+#1
+in_clka = 1;
+in_clkb = 0;
+#1
+in_clka = 0;
+in_clkb = 0;
+#1
+in_clka = 0;
+in_clkb = 1;
+#1
+
+// cycle 12 load and not (4)
+con_loadData = 0;
+con_readData = 1;
+con_writeData = 1;
+con_writeout = 0;
+sub_count = tempsub_count+1'b1;
+tempsub_count = sub_count;
+
+in_clka = 0;
+in_clkb = 0;
+#1
+in_clka = 1;
+in_clkb = 0;
+#1
+in_clka = 0;
+in_clkb = 0;
+#1
+in_clka = 0;
+in_clkb = 1;
+#1
+
+// cycle 12 load and not (5)
+con_loadData = 0;
+con_readData = 1;
+con_writeData = 1;
+con_writeout = 0;
+sub_count = tempsub_count+1'b1;
+tempsub_count = sub_count;
+
+in_clka = 0;
+in_clkb = 0;
+#1
+in_clka = 1;
+in_clkb = 0;
+#1
+in_clka = 0;
+in_clkb = 0;
+#1
+in_clka = 0;
+in_clkb = 1;
+#1
+
+// cycle 13 load (6)
+con_loadData = 0;
+con_readData = 1;
+con_writeData = 1;
+con_writeout = 0;
+sub_count = tempsub_count+1'b1;
+tempsub_count = sub_count;
+
+in_clka = 0;
+in_clkb = 0;
+#1
+in_clka = 1;
+in_clkb = 0;
+#1
+in_clka = 0;
+in_clkb = 0;
+#1
+in_clka = 0;
+in_clkb = 1;
+#1
+
+// cycle 12 load (7)
+con_loadData = 0;
+con_readData = 1;
+con_writeData = 1;
+con_writeout = 0;
+sub_count = tempsub_count+1'b1;
+tempsub_count = sub_count;
+
+in_clka = 0;
+in_clkb = 0;
+#1
+in_clka = 1;
+in_clkb = 0;
+#1
+in_clka = 0;
+in_clkb = 0;
+#1
+in_clka = 0;
+in_clkb = 1;
+#1
+
+// cycle 12 load (8)
+con_loadData = 0;
+con_readData = 1;
+con_writeData = 1;
+con_writeout = 0;
+sub_count = tempsub_count+1'b1;
+tempsub_count = sub_count;
+
+in_clka = 0;
+in_clkb = 0;
+#1
+in_clka = 1;
+in_clkb = 0;
+#1
+in_clka = 0;
+in_clkb = 0;
+#1
+in_clka = 0;
+in_clkb = 1;
+#1
+
+// cycle 8 load (9)
+con_loadData = 0;
+con_readData = 1;
+con_writeData = 1;
+con_writeout = 0;
+sub_count = tempsub_count+1'b1;
+tempsub_count = sub_count;
+in_clka = 0;
+in_clkb = 0;
+#1
+in_clka = 1;
+in_clkb = 0;
+#1
+in_clka = 0;
+in_clkb = 0;
+#1
+in_clka = 0;
+in_clkb = 1;
+#1
+
+// cycle 9 load (10)
+con_loadData = 0;
+con_readData = 1;
+con_writeData = 1;
+con_writeout = 0;
+sub_count = tempsub_count+1'b1;
+tempsub_count = sub_count;
+
+in_clka = 0;
+in_clkb = 0;
+#1
+in_clka = 1;
+in_clkb = 0;
+#1
+in_clka = 0;
+in_clkb = 0;
+#1
+in_clka = 0;
+in_clkb = 1;
+#1
+
+// cycle 10 load (11)
+con_loadData = 0;
+con_readData = 1;
+con_writeData = 1;
+con_writeout = 0;
+sub_count = tempsub_count+1'b1;
+tempsub_count = sub_count;
+in_clka = 0;
+in_clkb = 0;
+#1
+in_clka = 1;
+in_clkb = 0;
+#1
+in_clka = 0;
+in_clkb = 0;
+#1
+in_clka = 0;
+in_clkb = 1;
+#1
+
+
+// cycle 11 load and not (12)
+con_loadData = 0;
+con_readData = 1;
+con_writeData = 1;
+con_writeout = 0;
+sub_count = tempsub_count+1'b1;
+tempsub_count = sub_count;
+
+in_clka = 0;
+in_clkb = 0;
+#1
+in_clka = 1;
+in_clkb = 0;
+#1
+in_clka = 0;
+in_clkb = 0;
+#1
+in_clka = 0;
+in_clkb = 1;
+#1
+
+// cycle 12 load and not (13)
+con_loadData = 0;
+con_readData = 1;
+con_writeData = 1;
+con_writeout = 0;
+sub_count = tempsub_count+1'b1;
+tempsub_count = sub_count;
+in_clka = 0;
+in_clkb = 0;
+#1
+in_clka = 1;
+in_clkb = 0;
+#1
+in_clka = 0;
+in_clkb = 0;
+#1
+in_clka = 0;
+in_clkb = 1;
+#1
+
+// cycle 12 load and not (14)
+con_loadData = 0;
+con_readData = 1;
+con_writeData = 1;
+con_writeout = 0;
+sub_count = tempsub_count+1'b1;
+tempsub_count = sub_count;
+
+in_clka = 0;
+in_clkb = 0;
+#1
+in_clka = 1;
+in_clkb = 0;
+#1
+in_clka = 0;
+in_clkb = 0;
+#1
+in_clka = 0;
+in_clkb = 1;
+#1
+
+// cycle 13 load (15)
+con_loadData = 0;
+con_readData = 1;
+con_writeData = 1;
+con_writeout = 0;
+sub_count = tempsub_count+1'b1;
+tempsub_count = sub_count;
 in_clka = 0;
 in_clkb = 0;
 #1
@@ -563,10 +901,10 @@ in_clkb = 1;
 // cycle 9 load (1)
 con_loadData = 0;
 con_readData = 1;
-con_writeData = 0;
+con_writeData = 1;
 con_writeout = 0;
-//sub_count = tempsub_count+1'b1;
-//tempsub_count = sub_count;
+sub_count = tempsub_count+1'b1;
+tempsub_count = sub_count;
 
 in_clka = 0;
 in_clkb = 0;
@@ -581,9 +919,9 @@ in_clka = 0;
 in_clkb = 1;
 #1
 
-// cycle 10 load (1)
+// cycle 10 load (2)
 con_loadData = 0;
-con_readData = 0;
+con_readData = 1;
 con_writeData = 1;
 con_writeout = 0;
 sub_count = tempsub_count+1'b1;
@@ -603,30 +941,9 @@ in_clkb = 1;
 #1
 
 
-// cycle 11 load and not (2)
+// cycle 11 load and not (3)
 con_loadData = 0;
 con_readData = 1;
-con_writeData = 0;
-con_writeout = 0;
-//sub_count = tempsub_count+1'b1;
-//tempsub_count = sub_count;
-
-in_clka = 0;
-in_clkb = 0;
-#1
-in_clka = 1;
-in_clkb = 0;
-#1
-in_clka = 0;
-in_clkb = 0;
-#1
-in_clka = 0;
-in_clkb = 1;
-#1
-
-// cycle 12 load and not (2)
-con_loadData = 0;
-con_readData = 0;
 con_writeData = 1;
 con_writeout = 0;
 sub_count = tempsub_count+1'b1;
@@ -645,30 +962,9 @@ in_clka = 0;
 in_clkb = 1;
 #1
 
-// cycle 12 load and not (3)
+// cycle 12 load and not (4)
 con_loadData = 0;
 con_readData = 1;
-con_writeData = 0;
-con_writeout = 0;
-//sub_count = tempsub_count+1'b1;
-//tempsub_count = sub_count;
-
-in_clka = 0;
-in_clkb = 0;
-#1
-in_clka = 1;
-in_clkb = 0;
-#1
-in_clka = 0;
-in_clkb = 0;
-#1
-in_clka = 0;
-in_clkb = 1;
-#1
-
-// cycle 13 load (3)
-con_loadData = 0;
-con_readData = 0;
 con_writeData = 1;
 con_writeout = 0;
 sub_count = tempsub_count+1'b1;
@@ -687,30 +983,9 @@ in_clka = 0;
 in_clkb = 1;
 #1
 
-// cycle 12 load (4)
+// cycle 12 load and not (5)
 con_loadData = 0;
 con_readData = 1;
-con_writeData = 0;
-con_writeout = 0;
-//sub_count = tempsub_count+1'b1;
-//tempsub_count = sub_count;
-
-in_clka = 0;
-in_clkb = 0;
-#1
-in_clka = 1;
-in_clkb = 0;
-#1
-in_clka = 0;
-in_clkb = 0;
-#1
-in_clka = 0;
-in_clkb = 1;
-#1
-
-// cycle 12 load (4)
-con_loadData = 0;
-con_readData = 0;
 con_writeData = 1;
 con_writeout = 0;
 sub_count = tempsub_count+1'b1;
@@ -729,28 +1004,9 @@ in_clka = 0;
 in_clkb = 1;
 #1
 
-// cycle 8 load (5)
+// cycle 13 load (6)
 con_loadData = 0;
 con_readData = 1;
-con_writeData = 0;
-con_writeout = 0;
-
-in_clka = 0;
-in_clkb = 0;
-#1
-in_clka = 1;
-in_clkb = 0;
-#1
-in_clka = 0;
-in_clkb = 0;
-#1
-in_clka = 0;
-in_clkb = 1;
-#1
-
-// cycle 9 load (5)
-con_loadData = 0;
-con_readData = 0;
 con_writeData = 1;
 con_writeout = 0;
 sub_count = tempsub_count+1'b1;
@@ -769,92 +1025,13 @@ in_clka = 0;
 in_clkb = 1;
 #1
 
-// cycle 10 load (6)
+// cycle 12 load (7)
 con_loadData = 0;
 con_readData = 1;
-con_writeData = 0;
-con_writeout = 0;
-
-in_clka = 0;
-in_clkb = 0;
-#1
-in_clka = 1;
-in_clkb = 0;
-#1
-in_clka = 0;
-in_clkb = 0;
-#1
-in_clka = 0;
-in_clkb = 1;
-#1
-
-
-// cycle 11 load and not (6)
-con_loadData = 0;
-con_readData = 0;
 con_writeData = 1;
 con_writeout = 0;
 sub_count = tempsub_count+1'b1;
 tempsub_count = sub_count;
-
-in_clka = 0;
-in_clkb = 0;
-#1
-in_clka = 1;
-in_clkb = 0;
-#1
-in_clka = 0;
-in_clkb = 0;
-#1
-in_clka = 0;
-in_clkb = 1;
-#1
-
-// cycle 12 load and not (7)
-con_loadData = 0;
-con_readData = 1;
-con_writeData = 0;
-con_writeout = 0;
-
-in_clka = 0;
-in_clkb = 0;
-#1
-in_clka = 1;
-in_clkb = 0;
-#1
-in_clka = 0;
-in_clkb = 0;
-#1
-in_clka = 0;
-in_clkb = 1;
-#1
-
-// cycle 12 load and not (7)
-con_loadData = 0;
-con_readData = 0;
-con_writeData = 1;
-con_writeout = 0;
-sub_count = tempsub_count+1'b1;
-tempsub_count = sub_count;
-
-in_clka = 0;
-in_clkb = 0;
-#1
-in_clka = 1;
-in_clkb = 0;
-#1
-in_clka = 0;
-in_clkb = 0;
-#1
-in_clka = 0;
-in_clkb = 1;
-#1
-
-// cycle 13 load (8)
-con_loadData = 0;
-con_readData = 1;
-con_writeData = 0;
-con_writeout = 0;
 
 in_clka = 0;
 in_clkb = 0;
@@ -871,7 +1048,7 @@ in_clkb = 1;
 
 // cycle 12 load (8)
 con_loadData = 0;
-con_readData = 0;
+con_readData = 1;
 con_writeData = 1;
 con_writeout = 0;
 sub_count = tempsub_count+1'b1;
@@ -890,33 +1067,13 @@ in_clka = 0;
 in_clkb = 1;
 #1
 
-// cycle 12 load (9)
+// cycle 8 load (9)
 con_loadData = 0;
 con_readData = 1;
-con_writeData = 0;
-con_writeout = 0;
-
-in_clka = 0;
-in_clkb = 0;
-#1
-in_clka = 1;
-in_clkb = 0;
-#1
-in_clka = 0;
-in_clkb = 0;
-#1
-in_clka = 0;
-in_clkb = 1;
-#1
-
-// cycle 12 idle (9)
-con_loadData = 0;
-con_readData = 0;
 con_writeData = 1;
 con_writeout = 0;
 sub_count = tempsub_count+1'b1;
 tempsub_count = sub_count;
-
 in_clka = 0;
 in_clkb = 0;
 #1
@@ -930,28 +1087,9 @@ in_clka = 0;
 in_clkb = 1;
 #1
 
-// cycle 12 not (10)
+// cycle 9 load (10)
 con_loadData = 0;
 con_readData = 1;
-con_writeData = 0;
-con_writeout = 0;
-
-in_clka = 0;
-in_clkb = 0;
-#1
-in_clka = 1;
-in_clkb = 0;
-#1
-in_clka = 0;
-in_clkb = 0;
-#1
-in_clka = 0;
-in_clkb = 1;
-#1
-
-// cycle 12 not (10)
-con_loadData = 0;
-con_readData = 0;
 con_writeData = 1;
 con_writeout = 0;
 sub_count = tempsub_count+1'b1;
@@ -970,33 +1108,13 @@ in_clka = 0;
 in_clkb = 1;
 #1
 
-// cycle 12 idle (11)
+// cycle 10 load (11)
 con_loadData = 0;
 con_readData = 1;
-con_writeData = 0;
-con_writeout = 0;
-
-in_clka = 0;
-in_clkb = 0;
-#1
-in_clka = 1;
-in_clkb = 0;
-#1
-in_clka = 0;
-in_clkb = 0;
-#1
-in_clka = 0;
-in_clkb = 1;
-#1
-
-// cycle 12 restart (11)
-con_loadData = 0;
-con_readData = 0;
 con_writeData = 1;
 con_writeout = 0;
 sub_count = tempsub_count+1'b1;
 tempsub_count = sub_count;
-
 in_clka = 0;
 in_clkb = 0;
 #1
@@ -1009,27 +1127,11 @@ in_clkb = 0;
 in_clka = 0;
 in_clkb = 1;
 #1
-// cycle 12 restart (12)
+
+
+// cycle 11 load and not (12)
 con_loadData = 0;
 con_readData = 1;
-con_writeData = 0;
-con_writeout = 0;
-
-in_clka = 0;
-in_clkb = 0;
-#1
-in_clka = 1;
-in_clkb = 0;
-#1
-in_clka = 0;
-in_clkb = 0;
-#1
-in_clka = 0;
-in_clkb = 1;
-#1
-// cycle 12 restart (12)
-con_loadData = 0;
-con_readData = 0;
 con_writeData = 1;
 con_writeout = 0;
 sub_count = tempsub_count+1'b1;
@@ -1047,32 +1149,14 @@ in_clkb = 0;
 in_clka = 0;
 in_clkb = 1;
 #1
-// cycle 12 restart (13)
+
+// cycle 12 load and not (13)
 con_loadData = 0;
 con_readData = 1;
-con_writeData = 0;
-con_writeout = 0;
-
-in_clka = 0;
-in_clkb = 0;
-#1
-in_clka = 1;
-in_clkb = 0;
-#1
-in_clka = 0;
-in_clkb = 0;
-#1
-in_clka = 0;
-in_clkb = 1;
-#1
-// cycle 12 restart (13)
-con_loadData = 0;
-con_readData = 0;
 con_writeData = 1;
 con_writeout = 0;
 sub_count = tempsub_count+1'b1;
 tempsub_count = sub_count;
-
 in_clka = 0;
 in_clkb = 0;
 #1
@@ -1085,27 +1169,10 @@ in_clkb = 0;
 in_clka = 0;
 in_clkb = 1;
 #1
-// cycle 12 restart (14)
+
+// cycle 12 load and not (14)
 con_loadData = 0;
 con_readData = 1;
-con_writeData = 0;
-con_writeout = 0;
-
-in_clka = 0;
-in_clkb = 0;
-#1
-in_clka = 1;
-in_clkb = 0;
-#1
-in_clka = 0;
-in_clkb = 0;
-#1
-in_clka = 0;
-in_clkb = 1;
-#1
-// cycle 12 restart (14)
-con_loadData = 0;
-con_readData = 0;
 con_writeData = 1;
 con_writeout = 0;
 sub_count = tempsub_count+1'b1;
@@ -1123,70 +1190,14 @@ in_clkb = 0;
 in_clka = 0;
 in_clkb = 1;
 #1
-// cycle 12 restart (15)
+
+// cycle 13 load (15)
 con_loadData = 0;
 con_readData = 1;
-con_writeData = 0;
-con_writeout = 0;
-
-in_clka = 0;
-in_clkb = 0;
-#1
-in_clka = 1;
-in_clkb = 0;
-#1
-in_clka = 0;
-in_clkb = 0;
-#1
-in_clka = 0;
-in_clkb = 1;
-#1
-// cycle 12 restart (15)
-con_loadData = 0;
-con_readData = 0;
 con_writeData = 1;
 con_writeout = 0;
 sub_count = tempsub_count+1'b1;
 tempsub_count = sub_count;
-
-in_clka = 0;
-in_clkb = 0;
-#1
-in_clka = 1;
-in_clkb = 0;
-#1
-in_clka = 0;
-in_clkb = 0;
-#1
-in_clka = 0;
-in_clkb = 1;
-#1
-// cycle 12 restart (16)
-con_loadData = 0;
-con_readData = 1;
-con_writeData = 0;
-con_writeout = 0;
-
-in_clka = 0;
-in_clkb = 0;
-#1
-in_clka = 1;
-in_clkb = 0;
-#1
-in_clka = 0;
-in_clkb = 0;
-#1
-in_clka = 0;
-in_clkb = 1;
-#1
-// cycle 12 restart (16)
-con_loadData = 0;
-con_readData = 0;
-con_writeData = 1;
-con_writeout = 0;
-sub_count = tempsub_count+1'b1;
-tempsub_count = sub_count;
-
 in_clka = 0;
 in_clkb = 0;
 #1

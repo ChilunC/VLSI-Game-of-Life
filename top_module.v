@@ -11,23 +11,24 @@
 //               this top module.
 //-----------------------------------------------------
 //module top_module (in_clka, in_clkb, in_restart, in_load, out_start, out_state_main, in_d_in, out_d_out);
-module top_module(in_clka, in_clkb,in_inp,in_run,in_wai,con_loadData, con_readData, con_writeData,con_writeout,in_MuxData,out_MuxDataOut,con_loseSig,out_win,out_state);
+module top_module(in_clka, in_clkb,in_inp,in_run,in_wai,in_reset,in_DataIn, con_loadData, con_readData, con_writeData,con_writeout,con_restart, out_MuxData,out_MemBData,con_loseSig,out_win,out_state, con_count,con_countWriteout, out_temp_addNum);
 //-------------Input Ports-----------------------------
 //input   in_clka, in_clkb, in_restart, in_load, in_d_in;
-input    in_clka, in_clkb,in_inp,in_run,in_wai,in_MuxData [15:0];
+input    in_clka, in_clkb,in_inp,in_run,in_wai,in_reset, in_DataIn;
 
 //-------------Output Ports----------------------------
 //output  out_start;
 //output [1:0] out_state_main; 
 //output [3:0] out_d_out;
-output out_state[2:0], out_MuxDataOut [15:0];
+output out_state[2:0], out_MuxData [15:0], out_MemBData [15:0], con_count [8:0],  con_countWriteout [8:0];
 //output con_same, con_savepattern, con_savetest, out_match,out_error,con_clearCon, con_loadA, con_loadB, con_loadC, con_loadD;
-output con_loadData,con_readData,con_writeData,con_writeout,con_loseSig,out_win;
+output con_loadData,con_readData,con_writeData,con_writeout,con_loseSig,out_win, con_restart, out_temp_addNum;
 //output out_DO0, out_DO1, out_DO2, out_DO3;
 //-------------Input ports Data Type-------------------
-wire    in_clka, in_clkb, in_inp,in_run,in_wai;
-wire [15:0] in_MuxData;
+wire    in_clka, in_clkb, in_inp,in_run,in_wai,in_reset;
+wire in_DataIn;
 wire     [8:0] con_count      ;
+wire     [8:0] con_countWriteout      ;
 
 //-------------Output Ports Data Type------------------
 //wire     out_start;
@@ -40,23 +41,28 @@ wire     [8:0] con_count      ;
 //module dataPath (clka,clkb,xData, yData, accumData, accumCon, loadX,loadY, loadTemp, clearCon);
 //reg in_clka, in_clkb, in_restart, in_load, in_Not, in_data0, in_data1, in_data2, in_data3;
 wire con_loadData,con_readData,con_writeData,con_writeout,con_loseSig,out_win;
-wire [15:0] out_MuxDataOut;
+wire [15:0] out_MuxData;
+wire [15:0] out_MemBData;
+wire [2:0] out_temp_addNum;
 
 
-wire [3:0] out_state;
+wire [2:0] out_state;
 //----------Code startes Here------------------------
 
 dataPath U2 (.clka (in_clka),
-           .clkb (in_clkb),
+	   .clkb (in_clkb),
+	   .restart (con_restart),
 	   .loadData (con_loadData),
 	   .readData (con_readData),
-       .writeData (con_writeData),
+	   .writeData (con_writeData),
 	   .writeout (con_writeout),
-       .MuxData (in_MuxData),
-       .MuxDataOut (out_MuxDataOut),
-       .loseSig (con_loseSig),
-       .count (con_count)
-          );
+	   .MuxData (out_MuxData),
+	   .MemBData (out_MemBData),
+	   .DataIn (in_DataIn),
+	   .loseSig (con_loseSig),
+	   .count (con_count),
+	   .temp_addNumTest (out_temp_addNum)
+        );
           
 //module dataPath (clka,clkb,loadData, readData, writeData,writeout,MuxData,MuxDataOut, loseSig,count);
 
@@ -65,24 +71,25 @@ dataPath U2 (.clka (in_clka),
            .inp (in_inp),
         .run (in_run),
         .wai (in_wai),
+		.reset (in_reset),
        .loadData (con_loadData),
        .readData (con_readData),
 	   .writeData (con_writeData),
 	   .writeout (con_writeout),
 	   .win (out_win),
        .loseSig (con_loseSig),
+	   .state (out_state),
        .count (con_count),
-       .state (out_state)
+	   .countWriteout (con_countWriteout),
+       .restart (con_restart)
           );
           
 
-//module FSM (clka, clkb, inp, run, wai, loadData,readData,writeData,writeout, win, state,count);;
+//module FSM (clka, clkb, inp, run, wai, loadData,readData,writeData,writeout, win,loseSig, state,count, restart);
 
 
 
 
 
 endmodule // End of Module top_module
-                                    
-
                                     

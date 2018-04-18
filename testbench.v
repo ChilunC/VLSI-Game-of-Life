@@ -1,36 +1,45 @@
 module top_module_tb();
 
-reg in_clka, in_clkb, in_inp, in_run, in_wai;
-reg [15:0] in_MuxData;
-wire con_loadData, con_readData, con_writeData, con_win;
+reg in_clka, in_clkb, in_inp, in_run, in_wai, in_reset, in_DataIn;
+wire [15:0] out_MuxData;
+wire [15:0] out_MemBData;
+wire con_loadData, con_readData, con_writeData, out_win, con_restart;
 
-parameter A1  = 16'b0000000000000001, B1= 16'b0000000000000010, C1 = 16'b0000000000000001, D1= 16'b0000000000000010;
+parameter B1  = 16'b0000000000000001, A1= 16'b1010010011010010, C1 = 16'b0000000000000001, D1= 16'b0000000000000010;
 parameter A2 = 3'b010, B2 = 3'b011, C2 = 3'b010, D2 = 3'b011;
 parameter A3 = 3'b011, B3 = 3'b100, C3 = 3'b011, D3 = 3'b100;
 parameter CLEAR = 3'b000;
 
 
 wire [2:0] out_state;
+wire [2:0] con_tempaddNum;
 //wire [2:0] out_substate;
-wire [8:0] sub_count;
+wire [8:0] con_count;
+wire [8:0] con_countWriteout;
 //wire out_DO0, out_DO1, out_DO2, out_DO3;
 
 //create an FSM instance.
-//module top_module(in_clka, in_clkb,in_inp,in_run,in_wai,con_loadData, con_readData, con_writeData,con_writeout,in_MuxData,out_MuxDataOut,con_loseSig,out_win,out_state);
+//module top_module(in_clka, in_clkb,in_inp,in_run,in_wai,in_DataIn, con_loadData, con_readData, con_writeData,con_writeout,out_MuxData,con_loseSig,out_win,out_state, con_count);
 top_module U3 (.in_clka (in_clka),
            .in_clkb (in_clkb),
            .in_inp (in_inp),
 	   .in_run (in_run),
 	   .in_wai (in_wai),
+	   .in_reset (in_reset),
+	   .in_DataIn (in_DataIn),
 	   .con_loadData (con_loadData),
 	   .con_readData (con_readData),
        .con_writeData (con_writeData),
        .con_writeout (con_writeout),
-       .in_MuxData (in_MuxData),
-       .out_MuxDataOut (ou_MuxDataOut),
+	   .con_restart (con_restart),
+       .out_MuxData (out_MuxData),
+	   .out_MemBData (out_MemBData),
        .con_loseSig (con_loseSig),
        .out_win (out_win),
-	   .out_state (out_state)
+	   .out_state (out_state),
+	   .con_count (con_count),
+	   .con_countWriteout (con_countWriteout),
+	   .con_temp_addNum (con_temp_addNum)
 	   );
 
 //create an FSM instance.
@@ -82,11 +91,52 @@ mainFSM U3 (.clka (in_clka),
 initial
 begin
 
-// cycle 0
+// cycle 1 Restart (1)
+in_reset = 1;
 in_inp = 0;
 in_run = 0;
 in_wai = 0;
-in_MuxData = A1;
+
+
+in_clka = 0;
+in_clkb = 0;
+#1
+in_clka = 1;
+in_clkb = 0;
+#1
+in_clka = 0;
+in_clkb = 0;
+#1
+in_clka = 0;
+in_clkb = 1;
+#1
+
+
+// cycle 1 Restart (2)
+in_reset = 0;
+in_inp = 1;
+in_run = 0;
+in_wai = 0;
+
+
+in_clka = 0;
+in_clkb = 0;
+#1
+in_clka = 1;
+in_clkb = 0;
+#1
+in_clka = 0;
+in_clkb = 0;
+#1
+in_clka = 0;
+in_clkb = 1;
+#1
+
+// cycle 0 Input (2)
+in_inp = 1;
+in_run = 0;
+in_wai = 0;
+in_DataIn = A1[0];
 
 
 in_clka = 0;
@@ -103,10 +153,279 @@ in_clka = 0;
 in_clkb = 1;
 #1
 
-// cycle 1 Restart (1)
+
+
+// cycle 2 Idle (1)
 in_inp = 1;
 in_run = 0;
 in_wai = 0;
+in_DataIn = A1[1];
+
+in_clka = 0;
+in_clkb = 0;
+#1
+in_clka = 1;
+in_clkb = 0;
+#1
+in_clka = 0;
+in_clkb = 0;
+#1
+in_clka = 0;
+in_clkb = 1;
+#1
+
+// cycle 2 Idle (1)
+in_inp = 1;
+in_run = 0;
+in_wai = 0;
+in_DataIn = A1[2];
+
+in_clka = 0;
+in_clkb = 0;
+#1
+in_clka = 1;
+in_clkb = 0;
+#1
+in_clka = 0;
+in_clkb = 0;
+#1
+in_clka = 0;
+in_clkb = 1;
+#1
+
+// cycle 2 Idle (1)
+in_inp = 1;
+in_run = 0;
+in_wai = 0;
+in_DataIn = A1[3];
+
+in_clka = 0;
+in_clkb = 0;
+#1
+in_clka = 1;
+in_clkb = 0;
+#1
+in_clka = 0;
+in_clkb = 0;
+#1
+in_clka = 0;
+in_clkb = 1;
+#1
+
+// cycle 2 Idle (1)
+in_inp = 1;
+in_run = 0;
+in_wai = 0;
+in_DataIn = A1[4];
+
+in_clka = 0;
+in_clkb = 0;
+#1
+in_clka = 1;
+in_clkb = 0;
+#1
+in_clka = 0;
+in_clkb = 0;
+#1
+in_clka = 0;
+in_clkb = 1;
+#1
+
+// cycle 2 Idle (1)
+in_inp = 1;
+in_run = 0;
+in_wai = 0;
+in_DataIn = A1[5];
+
+in_clka = 0;
+in_clkb = 0;
+#1
+in_clka = 1;
+in_clkb = 0;
+#1
+in_clka = 0;
+in_clkb = 0;
+#1
+in_clka = 0;
+in_clkb = 1;
+#1
+
+// cycle 2 Idle (1)
+in_inp = 1;
+in_run = 0;
+in_wai = 0;
+in_DataIn = A1[6];
+
+in_clka = 0;
+in_clkb = 0;
+#1
+in_clka = 1;
+in_clkb = 0;
+#1
+in_clka = 0;
+in_clkb = 0;
+#1
+in_clka = 0;
+in_clkb = 1;
+#1
+
+// cycle 2 Idle (1)
+in_inp = 1;
+in_run = 0;
+in_wai = 0;
+in_DataIn = A1[7];
+
+in_clka = 0;
+in_clkb = 0;
+#1
+in_clka = 1;
+in_clkb = 0;
+#1
+in_clka = 0;
+in_clkb = 0;
+#1
+in_clka = 0;
+in_clkb = 1;
+#1
+
+// cycle 2 Idle (1)
+in_inp = 1;
+in_run = 0;
+in_wai = 0;
+in_DataIn = A1[8];
+
+in_clka = 0;
+in_clkb = 0;
+#1
+in_clka = 1;
+in_clkb = 0;
+#1
+in_clka = 0;
+in_clkb = 0;
+#1
+in_clka = 0;
+in_clkb = 1;
+#1
+
+// cycle 2 Idle (1)
+in_inp = 1;
+in_run = 0;
+in_wai = 0;
+in_DataIn = A1[9];
+
+in_clka = 0;
+in_clkb = 0;
+#1
+in_clka = 1;
+in_clkb = 0;
+#1
+in_clka = 0;
+in_clkb = 0;
+#1
+in_clka = 0;
+in_clkb = 1;
+#1
+
+// cycle 2 Idle (1)
+in_inp = 1;
+in_run = 0;
+in_wai = 0;
+in_DataIn = A1[10];
+
+in_clka = 0;
+in_clkb = 0;
+#1
+in_clka = 1;
+in_clkb = 0;
+#1
+in_clka = 0;
+in_clkb = 0;
+#1
+in_clka = 0;
+in_clkb = 1;
+#1
+
+// cycle 2 Idle (1)
+in_inp = 1;
+in_run = 0;
+in_wai = 0;
+in_DataIn = A1[11];
+
+in_clka = 0;
+in_clkb = 0;
+#1
+in_clka = 1;
+in_clkb = 0;
+#1
+in_clka = 0;
+in_clkb = 0;
+#1
+in_clka = 0;
+in_clkb = 1;
+#1
+
+// cycle 2 Idle (1)
+in_inp = 1;
+in_run = 0;
+in_wai = 0;
+in_DataIn = A1[12];
+
+in_clka = 0;
+in_clkb = 0;
+#1
+in_clka = 1;
+in_clkb = 0;
+#1
+in_clka = 0;
+in_clkb = 0;
+#1
+in_clka = 0;
+in_clkb = 1;
+#1
+
+// cycle 2 Idle (1)
+in_inp = 1;
+in_run = 0;
+in_wai = 0;
+in_DataIn = A1[13];
+
+in_clka = 0;
+in_clkb = 0;
+#1
+in_clka = 1;
+in_clkb = 0;
+#1
+in_clka = 0;
+in_clkb = 0;
+#1
+in_clka = 0;
+in_clkb = 1;
+#1
+
+// cycle 2 Idle (1)
+in_inp = 1;
+in_run = 0;
+in_wai = 0;
+in_DataIn = A1[14];
+
+in_clka = 0;
+in_clkb = 0;
+#1
+in_clka = 1;
+in_clkb = 0;
+#1
+in_clka = 0;
+in_clkb = 0;
+#1
+in_clka = 0;
+in_clkb = 1;
+#1
+
+// cycle 2 Idle (1)
+in_inp = 1;
+in_run = 0;
+in_wai = 0;
+in_DataIn = A1[15];
 
 in_clka = 0;
 in_clkb = 0;
@@ -125,6 +444,7 @@ in_clkb = 1;
 in_inp = 0;
 in_run = 0;
 in_wai = 0;
+//in_DataIn = A1[16];
 
 in_clka = 0;
 in_clkb = 0;
@@ -851,6 +1171,3 @@ $stop;
 end 
 
 endmodule
-
-
-
