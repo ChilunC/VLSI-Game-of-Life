@@ -3,7 +3,7 @@ module top_module_tb();
 reg in_clka, in_clkb, in_inp, in_run, in_wai, in_reset, in_DataIn;
 wire [15:0] out_MuxData;
 wire [15:0] out_MemBData;
-wire con_loadData, con_readData, con_writeData, out_win, con_restart;
+wire con_loadData, con_readData, con_writeData, out_win, con_restart, out_finalbit;
 
 parameter B1  = 16'b0000000000000001, A1= 16'b1010010011010010, C1 = 16'b0000000000000001, D1= 16'b0000000000000010;
 parameter A2 = 3'b010, B2 = 3'b011, C2 = 3'b010, D2 = 3'b011;
@@ -12,7 +12,7 @@ parameter CLEAR = 3'b000;
 
 
 wire [2:0] out_state;
-wire [2:0] con_tempaddNum;
+wire [2:0] con_temp_addNum;
 //wire [2:0] out_substate;
 wire [8:0] con_count;
 wire [8:0] con_countWriteout;
@@ -39,7 +39,8 @@ top_module U3 (.in_clka (in_clka),
 	   .out_state (out_state),
 	   .con_count (con_count),
 	   .con_countWriteout (con_countWriteout),
-	   .con_temp_addNum (con_temp_addNum)
+	   .out_temp_addNum (con_temp_addNum),
+	   .out_finalbit (out_finalbit)
 	   );
 
 //create an FSM instance.

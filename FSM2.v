@@ -63,8 +63,10 @@ function [SIZE-1:0] fsm_function;
 
   case(state)
   IDLE: begin
-    if (inp == 1'b1) begin
+    if (reset == 1'b1) begin
         fsm_function = RESTART;
+	end else if(inp == 1'b1) begin
+		fsm_function = INPUT;
     end else if(run==1'b1) begin
         if(loseSig|wai) begin //constant to be replaced with WIN
             fsm_function = WAIT;	
@@ -117,14 +119,14 @@ function [SIZE-1:0] fsm_function;
 //    end
 //    end
   WIN1: begin
-    if (inp == 1'b1) begin
+    if (reset == 1'b1) begin
         fsm_function = RESTART;
     end else begin
         fsm_function = WIN1;      
     end
     end
   LOSE1: begin
-    if (inp == 1'b1) begin
+    if (reset == 1'b1) begin
         fsm_function = RESTART;
     end else begin
         fsm_function = LOSE1;      
@@ -142,7 +144,13 @@ function [SIZE-1:0] fsm_function;
     end
     end
   RESTART: begin
-  	 fsm_function = INPUT;
+	if (reset == 1'b1) begin
+        fsm_function = RESTART;
+    end else if(inp==1'b1) begin
+        fsm_function = INPUT;    
+	end else begin
+		fsm_function = IDLE;
+    end
 	end
   default: fsm_function = IDLE;
   endcase

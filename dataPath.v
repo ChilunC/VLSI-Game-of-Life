@@ -3,14 +3,14 @@
 // with count hold input and odd output
 //-----------------------------------------------------
 //module FSM (clka, clkb, restart, clearCon, strtPipe, loadV, loadX,loadY,loadW,loadR1,loadR2,state);
-module dataPath (clka,clkb,restart, loadData, readData, writeData,writeout,MuxData, MemBData, DataIn, loseSig,count, temp_addNumTest);
+module dataPath (clka,clkb,restart, loadData, readData, writeData,writeout,MuxData, MemBData, DataIn, loseSig,count, temp_addNumTest,finalbit);
 //-------------Input Ports-----------------------------
 input   clka,clkb,restart, loadData, readData, writeData, writeout, DataIn, count[8:0];
 //-------------Output Ports----------------------------
-output  loseSig, MuxData[15:0],MemBData[15:0], temp_addNumTest[2:0]; 
+output  loseSig, MuxData[15:0],MemBData[15:0], temp_addNumTest[2:0],finalbit; 
 wire loadData, readData, writeData,writeout, DataIn;
 
-reg contin, loseSig, next_loseSig;
+reg contin, loseSig, finalbit;
 //Internal Constants--------------------------
 parameter SIZE = 16;
 parameter SIZE1 = 9;
@@ -149,10 +149,13 @@ begin : Load_SEQ
 		MemBData <= CLEAR;		
 		contin =1'b0;
 	end
+	finalbit = (temp_addNum>=3'b011)&(temp_addNum<=3'b101);
 	if(writeData==1'b1) begin		
 		if(readData==1'b1) begin			
 			if(count[SIZEC-1:0]==ZERO) begin
 				contin = 1'b0;
+			end else if (temp_addNum>=3'b001) begin
+				contin = 1'b1;
 			end
 			
 			if (count[SIZEC-1:0]==ZERO) begin				
@@ -189,9 +192,7 @@ begin : Load_SEQ
 				MemBData[15] <= (temp_addNum>=3'b011)&(temp_addNum<=3'b101);    
 			end 
 			
-			if (temp_addNum>3'b001) begin
-				contin = 1'b1;
-			end
+			
 		end else if(loadData==1'b1) begin
 			
 			contin = 1'b1;
