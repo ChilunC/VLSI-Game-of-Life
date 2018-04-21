@@ -3,17 +3,17 @@
 // with count hold input and odd output
 //-----------------------------------------------------
 //module FSM (clka, clkb, restart, clearCon, strtPipe, loadV, loadX,loadY,loadW,loadR1,loadR2,state);
-module dataPath (clka,clkb,restart, loadData, readData, writeData,writeout,MuxData, MemBData, DataIn, loseSig,count, temp_addNumTest,finalbit);
+module dataPath (clka,clkb,restart, loadData, readData, writeData,writeout,MuxData, MemBData, DataIn, loseSig,count);
 //-------------Input Ports-----------------------------
-input   clka,clkb,restart, loadData, readData, writeData, writeout, DataIn, count[8:0];
+input   clka,clkb,restart, loadData, readData, writeData, writeout, DataIn, count[3:0];
 //-------------Output Ports----------------------------
-output  loseSig, MuxData[15:0],MemBData[15:0], temp_addNumTest[2:0],finalbit; 
+output  loseSig, MuxData[15:0],MemBData[15:0], temp_addNumTest[2:0]; 
 wire loadData, readData, writeData,writeout, DataIn;
 
-reg contin, loseSig, finalbit;
+reg contin, loseSig;
 //Internal Constants--------------------------
 parameter SIZE = 16;
-parameter SIZE1 = 9;
+parameter SIZE1 = 4;
 parameter SIZEC = 4;
 parameter SIZENUM = 3;
 
@@ -36,46 +36,8 @@ reg  [SIZE-1:0]			next_MuxData	;
 //assign tempSimBit = mux_function(MuxData,count);
 assign temp_addNum = add_function(count,MuxData);
 assign temp_MuxData = MemBData;
-//----------Function for Combo Logic-----------------
-/*
-function mux_function;
-  input [SIZE-1:0] MuxData;
-  input [SIZE1-1:0] count;
-    if (count[SIZEC-1:0]==ZERO) begin
-        mux_function = MuxData[0];
-    end else if(count[SIZEC-1:0]==ONE) begin
-        mux_function = MuxData[1];
-    end else if(count[SIZEC-1:0]==TWO) begin
-        mux_function = MuxData[2];
-    end else if(count[SIZEC-1:0]==THREE) begin
-        mux_function = MuxData[3];
-    end else if(count[SIZEC-1:0]==FOUR) begin
-        mux_function = MuxData[4];
-    end else if(count[SIZEC-1:0]==FIVE) begin
-        mux_function = MuxData[5];
-    end else if(count[SIZEC-1:0]==SIX) begin
-        mux_function = MuxData[6];
-    end else if(count[SIZEC-1:0]==SEVEN) begin
-        mux_function = MuxData[7];
-    end else if(count[SIZEC-1:0]==EIGHT) begin
-        mux_function = MuxData[8];
-    end else if(count[SIZEC-1:0]==NINE) begin
-        mux_function = MuxData[9];
-    end else if(count[SIZEC-1:0]==TEN) begin
-        mux_function = MuxData[10];
-    end else if(count[SIZEC-1:0]==ELEVEN) begin
-        mux_function = MuxData[11];
-    end else if(count[SIZEC-1:0]==TWELVE) begin
-        mux_function = MuxData[12];
-    end else if(count[SIZEC-1:0]==THIRTEEN) begin
-        mux_function = MuxData[13];
-    end else if(count[SIZEC-1:0]==FOURTEEN) begin
-        mux_function = MuxData[14];
-    end else if(count[SIZEC-1:0]==FIFTEEN) begin  
-        mux_function = MuxData[15];    
-    end
-endfunction
-*/
+
+//----------------------add function ----------------------
 function [SIZEC-1:0]add_function;
   input [SIZE1-1:0] count;
   input [SIZE-1:0]  MuxData;
@@ -118,29 +80,18 @@ endfunction
 
 always @ (posedge clkb)
 begin : Load_SEQ2
-	if(restart==1'b1) begin
-		//MuxData <= CLEAR;		
+	if(restart==1'b1) begin	
 		loseSig <= 1'b0;
 	end else begin
-		if(contin==1'b0) begin
-			loseSig <= 1'b1;
+		if(writeout==1'b1) begin
+			if(contin==1'b0) begin
+				loseSig <= 1'b1;
+			end
 		end
 		next_MuxData <= temp_MuxData;
 		temp_addNumTest <= temp_addNum;
 	end
-	/*
-	end else if (loadData==1'b1) begin
-		loseSig <= 1'b0;
-	end else if (writeout==1'b1) begin
-	
-		  
-		
-	end 
-	*/
 end
-
-//always @ (posedge clkb)
-//begin : 
 
 always @ (posedge clka)
 begin : Load_SEQ  
@@ -149,7 +100,6 @@ begin : Load_SEQ
 		MemBData <= CLEAR;		
 		contin =1'b0;
 	end
-	finalbit = (temp_addNum>=3'b011)&(temp_addNum<=3'b101);
 	if(writeData==1'b1) begin		
 		if(readData==1'b1) begin			
 			if(count[SIZEC-1:0]==ZERO) begin
@@ -232,11 +182,6 @@ begin : Load_SEQ
 		end
 	end
 	if(writeout==1'b1) begin
-	/*
-		if(contin==1'b0) begin
-			loseSig <= 1'b1;
-		end
-		*/
 		MuxData <= next_MuxData;
 	end
   

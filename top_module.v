@@ -10,11 +10,10 @@
 //               then increments that value and returns the value to
 //               this top module.
 //-----------------------------------------------------
-//module top_module (in_clka, in_clkb, in_restart, in_load, out_start, out_state_main, in_d_in, out_d_out);
-module top_module(in_clka, in_clkb,in_inp,in_run,in_wai,in_reset,in_DataIn, con_loadData, con_readData, con_writeData,con_writeout,con_restart, out_MuxData,out_MemBData,con_loseSig,out_win,out_state, con_count,con_countWriteout, out_temp_addNum);
+module top_module(in_clka, in_clkb,in_timer5, in_inp,in_run,in_wai,in_reset,in_DataIn, con_loadData, con_readData, con_writeData,con_writeout,con_restart, out_MuxData,out_MemBData,con_loseSig,out_win,out_state, con_count,con_countWriteout, out_temp_addNum);
 //-------------Input Ports-----------------------------
 //input   in_clka, in_clkb, in_restart, in_load, in_d_in;
-input    in_clka, in_clkb,in_inp,in_run,in_wai,in_reset, in_DataIn;
+input    in_clka, in_clkb, in_timer5, in_inp, in_run, in_wai, in_reset, in_DataIn;
 
 //-------------Output Ports----------------------------
 //output  out_start;
@@ -25,7 +24,7 @@ output out_state[2:0], out_MuxData [15:0], out_MemBData [15:0], con_count [8:0],
 output con_loadData,con_readData,con_writeData,con_writeout,con_loseSig,out_win, con_restart, out_temp_addNum;
 //output out_DO0, out_DO1, out_DO2, out_DO3;
 //-------------Input ports Data Type-------------------
-wire    in_clka, in_clkb, in_inp,in_run,in_wai,in_reset;
+wire    in_clka, in_clkb, in_timer5, in_inp,in_run,in_wai,in_reset;
 wire in_DataIn;
 wire     [8:0] con_count      ;
 wire     [8:0] con_countWriteout      ;
@@ -68,6 +67,7 @@ dataPath U2 (.clka (in_clka),
 
  FSM U1 (.clka (in_clka),
            .clkb (in_clkb),
+		   .timer5 (in_timer5),
            .inp (in_inp),
         .run (in_run),
         .wai (in_wai),
