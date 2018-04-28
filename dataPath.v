@@ -7,7 +7,8 @@ module dataPath (clka,clkb,restart, loadData, readData, writeData,writeout,MuxDa
 //-------------Input Ports-----------------------------
 input   clka,clkb,restart, loadData, readData, writeData, writeout, DataIn, count[3:0];
 //-------------Output Ports----------------------------
-output  loseSig, MuxData[15:0],MemBData[15:0], temp_addNumTest[2:0]; 
+output  loseSig, MuxData[15:0],MemBData[15:0]; 
+//temp_addNumTest[2:0]; 
 wire loadData, readData, writeData,writeout, DataIn;
 
 reg contin, loseSig;
@@ -189,5 +190,4 @@ end
 
 
 endmodule // End of Module FSM
-
 

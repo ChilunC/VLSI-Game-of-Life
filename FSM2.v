@@ -1,7 +1,7 @@
 // File Name   : 2 Phase Clock fsm_using_function.v  0 - 3 - 1 - 2 
 // with count hold input and odd output
 //-----------------------------------------------------
-module FSM (clka, clkb, inp, run, wai, reset, loadData,readData,writeData,writeout, win, lose, loseSig, state,count,countWriteout, restart);
+module FSM (clka, clkb, timer5, inp, run, wai, reset, loadData,readData,writeData,writeout, win, lose, loseSig, state,count,countWriteout, restart);
 //-------------Input Ports-----------------------------
 input   clka, clkb, timer5, inp, run, wai,reset,loseSig;
 //-------------Output Ports----------------------------
@@ -66,7 +66,7 @@ function [SIZE-1:0] fsm_function;
 	end else if(inp == 1'b1) begin
 		fsm_function = INPUT;
     end else if(run==1'b1) begin
-        if(loseSig|wai) begin //constant to be replaced with WIN
+        if(loseSig|wai|(timer5==1'b0)) begin //constant to be replaced with WIN
             fsm_function = WAIT;	
 		end else begin
             fsm_function = IREAD;

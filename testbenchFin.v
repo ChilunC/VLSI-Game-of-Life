@@ -25,7 +25,7 @@ parameter CLEAR = 3'b000;
 wire [2:0] out_state;
 wire [2:0] con_temp_addNum;
 //wire [2:0] out_substate;
-wire [8:0] con_count;
+wire [3:0] con_count;
 wire [8:0] con_countWriteout;
 //wire out_DO0, out_DO1, out_DO2, out_DO3;
 
@@ -108,6 +108,7 @@ in_reset = 1;
 in_inp = 0;
 in_run = 0;
 in_wai = 0;
+in_timer5 = 1;
 
 
 in_clka = 0;
@@ -438,6 +439,7 @@ in_inp = 1;
 in_run = 0;
 in_wai = 0;
 in_DataIn = A1[15];
+in_timer5 = 0;
 
 in_clka = 0;
 in_clkb = 0;
@@ -547,6 +549,26 @@ in_clkb = 1;
 in_inp = 0;
 in_run = 0;
 in_wai = 0;
+in_timer5 = 0;
+
+in_clka = 0;
+in_clkb = 0;
+#1
+in_clka = 1;
+in_clkb = 0;
+#1
+in_clka = 0;
+in_clkb = 0;
+#1
+in_clka = 0;
+in_clkb = 1;
+#1
+
+// cycle 1 idle (1)
+in_inp = 0;
+in_run = 0;
+in_wai = 0;
+in_timer5 = 1;
 
 in_clka = 0;
 in_clkb = 0;
@@ -873,6 +895,26 @@ in_clkb = 1;
 in_inp = 0;
 in_run = 1;
 in_wai = 0;
+int_timer5 = 0;
+
+in_clka = 0;
+in_clkb = 0;
+#1
+in_clka = 1;
+in_clkb = 0;
+#1
+in_clka = 0;
+in_clkb = 0;
+#1
+in_clka = 0;
+in_clkb = 1;
+#1
+
+// cycle 1 IDLE (1)
+in_inp = 0;
+in_run = 1;
+in_wai = 0;
+int_timer5 = 1;
 
 in_clka = 0;
 in_clkb = 0;
@@ -1199,6 +1241,26 @@ in_clkb = 1;
 in_inp = 0;
 in_run = 1;
 in_wai = 0;
+in_timer5 = 0;
+
+in_clka = 0;
+in_clkb = 0;
+#1
+in_clka = 1;
+in_clkb = 0;
+#1
+in_clka = 0;
+in_clkb = 0;
+#1
+in_clka = 0;
+in_clkb = 1;
+#1
+
+// cycle 2 IDLE (2)
+in_inp = 0;
+in_run = 1;
+in_wai = 0;
+in_timer5 = 1;
 
 in_clka = 0;
 in_clkb = 0;
@@ -1525,6 +1587,26 @@ in_clkb = 1;
 in_inp = 0;
 in_run = 1;
 in_wai = 0;
+in_timer5 = 0;
+
+in_clka = 0;
+in_clkb = 0;
+#1
+in_clka = 1;
+in_clkb = 0;
+#1
+in_clka = 0;
+in_clkb = 0;
+#1
+in_clka = 0;
+in_clkb = 1;
+#1
+
+// cycle 3 IDLE (2)
+in_inp = 0;
+in_run = 1;
+in_wai = 0;
+in_timer5 = 1;
 
 in_clka = 0;
 in_clkb = 0;
@@ -1851,6 +1933,26 @@ in_clkb = 1;
 in_inp = 0;
 in_run = 1;
 in_wai = 0;
+in_timer5 = 0;
+
+in_clka = 0;
+in_clkb = 0;
+#1
+in_clka = 1;
+in_clkb = 0;
+#1
+in_clka = 0;
+in_clkb = 0;
+#1
+in_clka = 0;
+in_clkb = 1;
+#1
+
+// cycle 24IDLE (2)
+in_inp = 0;
+in_run = 1;
+in_wai = 0;
+in_timer5 = 1;
 
 in_clka = 0;
 in_clkb = 0;
@@ -2177,6 +2279,26 @@ in_clkb = 1;
 in_inp = 0;
 in_run = 1;
 in_wai = 0;
+in_timer5 = 0;
+
+in_clka = 0;
+in_clkb = 0;
+#1
+in_clka = 1;
+in_clkb = 0;
+#1
+in_clka = 0;
+in_clkb = 0;
+#1
+in_clka = 0;
+in_clkb = 1;
+#1
+
+// cycle 5 IDLE (2)
+in_inp = 0;
+in_run = 1;
+in_wai = 0;
+in_timer5 = 1;
 
 in_clka = 0;
 in_clkb = 0;
@@ -2503,6 +2625,26 @@ in_clkb = 1;
 in_inp = 0;
 in_run = 1;
 in_wai = 0;
+in_timer5 = 0;
+
+in_clka = 0;
+in_clkb = 0;
+#1
+in_clka = 1;
+in_clkb = 0;
+#1
+in_clka = 0;
+in_clkb = 0;
+#1
+in_clka = 0;
+in_clkb = 1;
+#1
+
+// cycle 6 IDLE (2)
+in_inp = 0;
+in_run = 1;
+in_wai = 0;
+in_timer5 = 1;
 
 in_clka = 0;
 in_clkb = 0;
@@ -2829,6 +2971,26 @@ in_clkb = 1;
 in_inp = 0;
 in_run = 1;
 in_wai = 0;
+in_timer5 = 0;
+
+in_clka = 0;
+in_clkb = 0;
+#1
+in_clka = 1;
+in_clkb = 0;
+#1
+in_clka = 0;
+in_clkb = 0;
+#1
+in_clka = 0;
+in_clkb = 1;
+#1
+
+// cycle 7 IDLE (2)
+in_inp = 0;
+in_run = 1;
+in_wai = 0;
+in_timer5 = 1;
 
 in_clka = 0;
 in_clkb = 0;
@@ -3155,6 +3317,26 @@ in_clkb = 1;
 in_inp = 0;
 in_run = 1;
 in_wai = 0;
+in_timer5 = 0;
+
+in_clka = 0;
+in_clkb = 0;
+#1
+in_clka = 1;
+in_clkb = 0;
+#1
+in_clka = 0;
+in_clkb = 0;
+#1
+in_clka = 0;
+in_clkb = 1;
+#1
+
+// cycle 8 IDLE (2)
+in_inp = 0;
+in_run = 1;
+in_wai = 0;
+in_timer5 = 1;
 
 in_clka = 0;
 in_clkb = 0;
@@ -3481,6 +3663,26 @@ in_clkb = 1;
 in_inp = 0;
 in_run = 1;
 in_wai = 0;
+in_timer5 = 0;
+
+in_clka = 0;
+in_clkb = 0;
+#1
+in_clka = 1;
+in_clkb = 0;
+#1
+in_clka = 0;
+in_clkb = 0;
+#1
+in_clka = 0;
+in_clkb = 1;
+#1
+
+// cycle 9 IDLE (2)
+in_inp = 0;
+in_run = 1;
+in_wai = 0;
+in_timer5 = 1;
 
 in_clka = 0;
 in_clkb = 0;
@@ -3807,6 +4009,26 @@ in_clkb = 1;
 in_inp = 0;
 in_run = 1;
 in_wai = 0;
+in_timer5 = 0;
+
+in_clka = 0;
+in_clkb = 0;
+#1
+in_clka = 1;
+in_clkb = 0;
+#1
+in_clka = 0;
+in_clkb = 0;
+#1
+in_clka = 0;
+in_clkb = 1;
+#1
+
+// cycle 10 IDLE (2)
+in_inp = 0;
+in_run = 1;
+in_wai = 0;
+in_timer5 = 1;
 
 in_clka = 0;
 in_clkb = 0;
@@ -4133,6 +4355,26 @@ in_clkb = 1;
 in_inp = 0;
 in_run = 1;
 in_wai = 0;
+in_timer5 = 0;
+
+in_clka = 0;
+in_clkb = 0;
+#1
+in_clka = 1;
+in_clkb = 0;
+#1
+in_clka = 0;
+in_clkb = 0;
+#1
+in_clka = 0;
+in_clkb = 1;
+#1
+
+// cycle 11 IDLE (2)
+in_inp = 0;
+in_run = 1;
+in_wai = 0;
+in_timer5 = 1;
 
 in_clka = 0;
 in_clkb = 0;
@@ -4459,6 +4701,26 @@ in_clkb = 1;
 in_inp = 0;
 in_run = 1;
 in_wai = 0;
+in_timer5 = 0;
+
+in_clka = 0;
+in_clkb = 0;
+#1
+in_clka = 1;
+in_clkb = 0;
+#1
+in_clka = 0;
+in_clkb = 0;
+#1
+in_clka = 0;
+in_clkb = 1;
+#1
+
+// cycle 12 IDLE (2)
+in_inp = 0;
+in_run = 1;
+in_wai = 0;
+in_timer5 = 1;
 
 in_clka = 0;
 in_clkb = 0;
@@ -4785,6 +5047,26 @@ in_clkb = 1;
 in_inp = 0;
 in_run = 1;
 in_wai = 0;
+in_timer5 = 0;
+
+in_clka = 0;
+in_clkb = 0;
+#1
+in_clka = 1;
+in_clkb = 0;
+#1
+in_clka = 0;
+in_clkb = 0;
+#1
+in_clka = 0;
+in_clkb = 1;
+#1
+
+// cycle 13 IDLE (2)
+in_inp = 0;
+in_run = 1;
+in_wai = 0;
+in_timer5 = 1;
 
 in_clka = 0;
 in_clkb = 0;
