@@ -10,7 +10,7 @@
 //               then increments that value and returns the value to
 //               this top module.
 //-----------------------------------------------------
-module top_module(in_clka, in_clkb,in_timer5, in_inp,in_run,in_wai,in_reset,in_DataIn, con_loadData, con_readData, con_writeData,con_writeout,con_restart, out_MuxData,out_MemBData, out_lose, con_loseSig,out_win,out_state, con_count,con_countWriteout, out_temp_addNum);
+module top_module(in_clka, in_clkb,in_timer5, in_inp,in_run,in_wai,in_reset,in_DataIn, con_loadData, con_readData, con_writeData,con_writeout,con_restart, out_MuxData,out_MemBData, out_lose,out_win,out_state, con_count,con_countWriteout);
 //-------------Input Ports-----------------------------
 //input   in_clka, in_clkb, in_restart, in_load, in_d_in;
 input    in_clka, in_clkb, in_timer5, in_inp, in_run, in_wai, in_reset, in_DataIn;
@@ -21,7 +21,7 @@ input    in_clka, in_clkb, in_timer5, in_inp, in_run, in_wai, in_reset, in_DataI
 //output [3:0] out_d_out;
 output out_state[2:0], out_MuxData [15:0], out_MemBData [15:0], con_count [3:0],  con_countWriteout [8:0];
 //output con_same, con_savepattern, con_savetest, out_match,out_error,con_clearCon, con_loadA, con_loadB, con_loadC, con_loadD;
-output con_loadData,con_readData,con_writeData,con_writeout,con_loseSig,out_win, con_restart, out_lose;
+output con_loadData,con_readData,con_writeData,con_writeout,out_win, con_restart, out_lose;
 //output out_DO0, out_DO1, out_DO2, out_DO3;
 //-------------Input ports Data Type-------------------
 wire    in_clka, in_clkb, in_timer5, in_inp,in_run,in_wai,in_reset;
