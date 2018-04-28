@@ -9,15 +9,15 @@ output  state[2:0], loadData, readData, writeData,count[3:0],countWriteout[8:0],
 //-------------Input ports Data Type-------------------
 wire    clka, clkb, timer5, inp, run, wai,reset, loseSig;
 //-------------Output Ports Data Type------------------
-reg     loadData, readData, writeData,win, lose, writeout, restart;  //state and count defined under Internal Variables
-wire	loadDataCheck, readDataCheck, restartCheck;
+reg     loadData, readData, writeData,win, lose, writeout, restart, contTimer5, next_contTimer5;  //state and count defined under Internal Variables
+wire	loadDataCheck, readDataCheck, restartCheck, temp_contTimer5;
 //Internal Constants--------------------------
 parameter SIZE = 3;
 parameter SIZE1 = 9;
 parameter SIZEC = 4;
 parameter IDLE = 3'b000, INPUT  = 3'b010, WAIT = 3'b101, RESTART = 3'b111;
 parameter IREAD = 3'b011, WRITEOUT = 3'b100, WIN1 = 3'b001, LOSE1 = 3'b110;
-parameter FIN = 9'b000110010, BEG = 9'b000000000, ONECYCLE = 4'b1111; 
+parameter FIN = 9'b000001010, BEG = 9'b000000000, ONECYCLE = 4'b1111; 
 parameter WIN = 15'b110010111111111;
 parameter FIN1 = 4'b1111;
 //parameter IWRITE  = 3'b111, PAUSE = 3'b110, 
@@ -39,7 +39,7 @@ reg     [SIZE1-1:0]         countWriteout      ;
 wire  [SIZE1-1:0]           temp_countWriteout ;
 reg   [SIZE1-1:0]         next_countWriteout   ;
 //----------Code startes Here------------------------
-assign temp_state = fsm_function(state,count,inp, run, wai);
+assign temp_state = fsm_function(state,count,inp, run, wai, timer5);
 //assign temp_inpstate = fsminp_function(restart);
 assign temp_count = count_function(count,inp, loadData, readData, restart);
 assign temp_countWait = countWait + 1'b1;
@@ -47,6 +47,7 @@ assign temp_countWriteout = countWriteout + 1'b1;
 assign loadDataCheck = loadData;
 assign readDataCheck = readData;
 assign restartCheck = restart;
+assign temp_contTimer5 = ~contTimer5;
 //assign checkVal
 
 
@@ -57,6 +58,7 @@ function [SIZE-1:0] fsm_function;
   input inp;
   input run;
   input wai;
+  input timer5;
 //  fsm_function = IDLE;
 
   case(state)
@@ -69,7 +71,11 @@ function [SIZE-1:0] fsm_function;
         if(loseSig|wai|(timer5==1'b0)) begin //constant to be replaced with WIN
             fsm_function = WAIT;	
 		end else begin
-            fsm_function = IREAD;
+			if (contTimer5==1'b1) begin
+				fsm_function = IREAD;
+			end else begin
+				fsm_function = IDLE;
+			end
         end
 	end else if(wai==1'b1) begin
 		fsm_function = WAIT;
@@ -170,11 +176,13 @@ begin : FSM_SEQ
 		next_countWriteout <= BEG; //temp_countWriteout;
 		next_countWait <= BEG;
 		next_state <= RESTART; //temp_inpstate;
+		next_contTimer5 <= 1'b0;
 	end else begin
 		next_count <= temp_count;
 		next_countWait <= temp_countWait;
 		next_countWriteout <= temp_countWriteout;
 		next_state <= temp_state;
+		next_contTimer5 <= temp_contTimer5;
 	end    
 end
 
@@ -210,6 +218,7 @@ begin : OUTPUT_LOGIC
        writeout <= 1'b1;
        countWriteout <= next_countWriteout;
        restart <= 1'b0;
+	   contTimer5 <= 1'b0;
        end     
    RESTART: begin
        loadData <= 1'b0;
@@ -245,6 +254,9 @@ begin : OUTPUT_LOGIC
        readData <= 1'b0; 
        writeData <= 1'b0;
        writeout <= 1'b0;
+	   if(timer5==1'b0) begin
+		contTimer5 <= 1'b1;
+	   end
        //countWait <= next_countWait; //I don't think we want to count while waiting?
        end     						  //If we wait 49, then read/write once we don't want to win
   default: begin
@@ -252,6 +264,9 @@ begin : OUTPUT_LOGIC
 	readData <= 1'b0; 
 	writeData <= 1'b0; 
     writeout <= 1'b0;
+	if(timer5==1'b0) begin
+		contTimer5 <= 1'b1;
+	end
     //count <= BEG;
 	end
   endcase
